@@ -45,9 +45,15 @@ def _relu(x,der = False):
 
 activation = _sigmoid 
 
-w0 = 2*np.random.random((4,4))-1
-w1 = 2*np.random.random((4,1))-1
-parameter = (w0,w1)
+def inference(parameter,x):
+    
+    w0,w1 = parameter
+
+    l0 = np.array(x+[1])                     # (batch_size,i)
+    l1 = activation(l0.dot(w0))              # (batch_size,h)
+    l2 = activation(l1.dot(w1))              # (batch_size,o)
+
+    return l2
 
 # cross-entropy
 
@@ -96,7 +102,9 @@ def cross_entropy_train():
         w0 += l0.T.dot(l1_delta)
         
         if epoch%1000 == 0:
-            print(np.mean(loss))
+            report = "epoch " + str(epoch) +"\tloss = "+ str(np.mean(loss))
+            print(report)
+            # print("epoch ",epoch,"loss = "np.mean(loss))
 
         parameter = (w0,w1)
         
